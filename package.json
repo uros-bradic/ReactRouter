@@ -1,7 +1,7 @@
 {
   "name": "react-router",
   "version": "1.0.0",
-  "description": "Simple routing example in React",
+  "description": "React Router",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
