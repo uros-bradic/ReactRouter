@@ -8,9 +8,7 @@ export const PlanetsContainer = function PlanetsContainer(props) {
     onNextClick,
     hasNext,
     onPreviousClick,
-    hasPrevious,
-    planet,
-    onPlanetClick
+    hasPrevious
   } = props;
 
   return (
@@ -19,13 +17,11 @@ export const PlanetsContainer = function PlanetsContainer(props) {
         <div className="loader">Your results are loading</div>
       ) : (
         <PlanetPanel
-          planet={planet}
           planetList={planetList}
           hasNext={hasNext}
           onNextClick={onNextClick}
           hasPrevious={hasPrevious}
           onPreviousClick={onPreviousClick}
-          onPlanetClick={onPlanetClick}
         />
       )}
     </React.Fragment>

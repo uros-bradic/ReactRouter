@@ -3,7 +3,6 @@ import { PlanetsContainer } from "./PlanetsContainer";
 
 export const Container = function Container(props) {
   const [planetList, setPlanetList] = useState({});
-  const [planet, setPlanet] = useState(null);
 
   const [requestUrl, setRequestUrl] = useState(
     "https://swapi.co/api/planets?page=1"
@@ -28,11 +27,6 @@ export const Container = function Container(props) {
 
     setRequestUrl(planetList.previous);
     setHasNext(true);
-  };
-
-  const handlePlanetClick = function(e) {
-    e.preventDefault();
-    setPlanet(e.target.value);
   };
 
   useEffect(() => {
@@ -67,8 +61,6 @@ export const Container = function Container(props) {
           hasPrevious={hasPrevious}
           onNextClick={handleNextClick}
           onPreviousClick={handlePreviousClick}
-          planet={planet}
-          onPlanetClick={handlePlanetClick}
         />
       )}
     </div>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { Switch, Route, Link, useParams } from "react-router-dom";
 
 const Next = function({ onNextClick, disabled }) {
   return (
@@ -17,12 +18,21 @@ const Previous = function({ onPreviousClick, disabled }) {
 };
 
 const PlanetList = function({
-  planetNames,
+  planetList,
   hasPrevious,
   onPreviousClick,
   hasNext,
   onNextClick
 }) {
+  const planetNames = planetList.results
+    ? planetList.results.map(result => (
+        <li key={result.name}>
+          <Link to={`/planet/${result.name}`} className="link">
+            {result.name}
+          </Link>
+        </li>
+      ))
+    : null;
   return (
     <div>
       <h3>This is a list of planets</h3>
@@ -34,17 +44,17 @@ const PlanetList = function({
   );
 };
 
-const Planet = function({ planetDetails, onBackClick }) {
+const Planet = function({ planetList }) {
+  const planet = useParams();
+  const planetDetails = planetList.results
+    ? planetList.results.filter(pl => pl.name === planet.id)
+    : null;
   return (
     <div>
-      <h3>This is planet {planetDetails[0].name} description</h3>
+      <h3>Planet {planetDetails[0].name}</h3>
       <div>
-        <p>
-          Back to
-          <button className="button-link" onClick={onBackClick}>
-            planet list
-          </button>
-        </p>
+        <span>Back to </span>
+        <Link to="/">planet list</Link>
       </div>
       <div className="planet">
         <pre>{JSON.stringify(planetDetails[0], null, 2)}</pre>
@@ -59,54 +69,28 @@ export const PlanetPanel = function PlanetPanel(props) {
     onNextClick,
     hasNext,
     onPreviousClick,
-    hasPrevious,
-    planet,
-    onPlanetClick
+    hasPrevious
   } = props;
 
-  const [planetListView, setPlanetListView] = useState(true);
-
-  const handleClick = function(e) {
-    setPlanetListView(false);
-    onPlanetClick(e);
-  };
-
-  const handleBackClick = function(e) {
-    e.preventDefault();
-    setPlanetListView(true);
-  };
-
-  const planetNames = planetList.results
-    ? planetList.results.map(result => (
-        <li key={result.name} value={result.name}>
-          <button
-            className="button-link"
-            onClick={handleClick}
-            value={result.name}
-          >
-            {result.name}
-          </button>
-        </li>
-      ))
-    : null;
-
-  const planetDetails = planetList.results
-    ? planetList.results.filter(pl => pl.name === planet)
-    : null;
-
   return (
-    <React.Fragment>
-      {planetListView ? (
-        <PlanetList
-          planetNames={planetNames}
-          hasPrevious={hasPrevious}
-          onPreviousClick={onPreviousClick}
-          hasNext={hasNext}
-          onNextClick={onNextClick}
-        />
-      ) : (
-        <Planet planetDetails={planetDetails} onBackClick={handleBackClick} />
-      )}
-    </React.Fragment>
+    <Switch>
+      <Route
+        exact
+        path="/"
+        render={() => (
+          <PlanetList
+            planetList={planetList}
+            hasPrevious={hasPrevious}
+            onPreviousClick={onPreviousClick}
+            hasNext={hasNext}
+            onNextClick={onNextClick}
+          />
+        )}
+      />
+      <Route
+        path="/planet/:id"
+        render={() => <Planet planetList={planetList} />}
+      />
+    </Switch>
   );
 };
